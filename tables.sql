@@ -27,13 +27,13 @@ create table if not exists crr_changes(
     type text not null,
     tbl_name text not null,
     col_id text,
-    row_id text not null,
+    pk text not null,
     value any,
     site_id text not null,
     created_at bigint not null,
     applied_at bigint not null,
     seq integer,
-    primary key(id, type, tbl_name, col_id, row_id, value, site_id, created_at, applied_at, seq)
+    primary key(id, type, tbl_name, col_id, pk, value, site_id, created_at, applied_at, seq)
 );
 
 create table if not exists crr_client(

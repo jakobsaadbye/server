@@ -57,8 +57,6 @@ app.get("/changes", (req: Request, res: Response) => {
     const now = new Date().getTime();
     const rows = db.prepare(`SELECT * FROM "crr_changes" WHERE site_id != ? AND applied_at >= ?`).all(siteId, lastPulledAt);
 
-    console.log(rows.map(c => c.created_at)); // nocheckin
-
     res.status(200);
     res.send({ changes: rows, pulledAt: now });
   } catch (e) {

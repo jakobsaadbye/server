@@ -12,10 +12,15 @@ import { SqliteDB } from "../teilen-sql/sqlitedb.ts";
 const PORT = 3000;
 
 const db = new Database("lello.db", { int64: true }); // int64 here is important for the timestamps, defaults to false, sigh ...
-const sql = Deno.readTextFileSync("tables.sql");
+const sql = Deno.readTextFileSync("/Users/jsaad/Lello/server/tables.sql");
 db.exec(sql);
 
 const wDb = new SqliteDBWrapper(db) as unknown as SqliteDB;
+await wDb.upgradeAllTablesToCrr();
+await wDb.upgradeColumnToFractionalIndex("todos", "position");
+await wDb.upgradeColumnToFractionalIndex("columns", "position");
+await wDb.finalizeUpgrades();
+
 
 const reqLogger = function (req: Request, _res: Response, next: NextFunction) {
   console.info(`${req.method} "${req.path}"`);
@@ -36,8 +41,14 @@ app.get("/", (req: Request, res: Response) => {
 app.post("/changes", async (req: Request, res: Response) => {
   const { changes } = req.body;
   try {
-    await applyChanges(wDb, changes);
-    res.sendStatus(200);
+    const err = await applyChanges(wDb, changes);
+    if (err) {
+      console.error(err);
+      res.status(400);
+      res.send(err);  
+    } else {
+      res.sendStatus(200);
+    }
   } catch (e) {
     console.error(e);
     res.status(400);

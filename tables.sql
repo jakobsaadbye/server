@@ -36,6 +36,13 @@ create table if not exists crr_changes(
     primary key(id, type, tbl_name, col_id, pk, value, site_id, created_at, applied_at, seq)
 );
 
+create table if not exists crr_columns(
+    tbl_name text not null,
+    col_id text not null,
+    type text not null,
+    primary key(tbl_name, col_id)
+);
+
 create table if not exists crr_client(
     site_id primary key,
     last_pulled_at bigint not null default 0,

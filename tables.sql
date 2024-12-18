@@ -40,6 +40,7 @@ create table if not exists crr_columns(
     tbl_name text not null,
     col_id text not null,
     type text not null,
+    parent_col_id text,
     primary key(tbl_name, col_id)
 );
 

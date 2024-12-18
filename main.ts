@@ -3,7 +3,7 @@ import express, { NextFunction, Request, Response } from "npm:express@4.18.2";
 import bodyParser from "npm:body-parser";
 import cors from "npm:cors"
 
-import { SqliteDBWrapper } from "../teilen-sql/wrapper.ts"
+import { SqliteDBWrapper } from "../teilen-sql/dbwrapper.ts"
 import { applyChanges } from "../teilen-sql/change.ts"
 
 import { Database } from "jsr:@db/sqlite@0.12";
@@ -17,8 +17,8 @@ db.exec(sql);
 
 const wDb = new SqliteDBWrapper(db) as unknown as SqliteDB;
 await wDb.upgradeAllTablesToCrr();
-await wDb.upgradeColumnToFractionalIndex("todos", "position");
-await wDb.upgradeColumnToFractionalIndex("columns", "position");
+await wDb.upgradeColumnToFractionalIndex("columns", "position", "board_id");
+await wDb.upgradeColumnToFractionalIndex("todos", "position", "column_id");
 await wDb.finalizeUpgrades();
 
 

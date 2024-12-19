@@ -31,7 +31,7 @@ const app = express();
 app.use(cors());
 app.use(reqLogger);
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: "1mb" }));
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Ping Pong");
@@ -45,7 +45,7 @@ app.post("/changes", async (req: Request, res: Response) => {
     if (err) {
       console.error(err);
       res.status(400);
-      res.send(err);  
+      res.send(err);
     } else {
       res.sendStatus(200);
     }
